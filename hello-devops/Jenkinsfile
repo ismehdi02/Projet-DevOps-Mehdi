@@ -14,14 +14,23 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh 'mvn -version'
-        sh 'mvn -B clean package'
+        dir('hello-devops') {
+          sh 'mvn -B -DskipTests clean package'
+        }
       }
     }
 
     stage('Test') {
       steps {
-        sh 'mvn -B test'
+        dir('hello-devops') {
+          sh 'mvn -B test'
+        }
+      }
+    }
+
+    stage('Archive') {
+      steps {
+        archiveArtifacts artifacts: 'hello-devops/target/*.jar', fingerprint: true
       }
     }
   }
